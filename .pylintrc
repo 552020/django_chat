@@ -1,0 +1,5 @@
+[MESSAGES CONTROL]
+disable=missing-class-docstring, line-too-long
+
+[pylint]
+max-line-length=100
