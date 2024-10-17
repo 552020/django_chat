@@ -21,4 +21,4 @@ jobs:
 
       - name: Deploy to VM
         run: |
-          ssh -o StrictHostKeyChecking=no slombard@139.162.183.187 'bash ~/deploy.sh'
+          ssh -o StrictHostKeyChecking=no slombard@139.162.183.187 'bash /srv/django_chat/deploy.sh'
