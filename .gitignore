@@ -1,0 +1,43 @@
+# Python cache files
+__pycache__/
+*.py[cod]
+
+# Virtual environment
+venv/
+.env
+
+# Django migrations
+*/migrations/*.py
+*/migrations/*.pyc
+
+# Database files
+db.sqlite3
+
+# Static files
+/static/
+media/
+
+# IDE and editor files
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# Log files
+*.log
+
+# Coverage reports
+.coverage
+htmlcov/
+
+# Test output
+test-results/
+*.egg-info/
+dist/
+build/
+
+# Jupyter Notebook checkpoints
+.ipynb_checkpoints/
+
+# Environment variables
+.env
