@@ -21,13 +21,13 @@ run_backend: build_backend
 
 # Bring up the full Docker Compose environment (Django + Redis)
 up:
-	docker-compose up --build
+	docker compose up --build
 
 # Bring down the Docker Compose environment
 down:
-	docker-compose down
+	docker compose down
 
 # Clean up Docker containers and images
 clean:
-	docker-compose down
+	docker compose down
 	docker system prune -f
