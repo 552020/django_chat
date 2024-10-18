@@ -6,7 +6,8 @@ services:
 
     volumes:
       - ./src/backend:/app
-      - /etc/letsencrypt/live/django.sldunit.xyz:/etc/ssl/certs # Mounting SSL certificates
+      - /etc/letsencrypt/live/django.sldunit.xyz:/etc/ssl/certs # Mounting SSL symbolic links
+      - /etc/letsencrypt/archive/django.sldunit.xyz:/etc/letsencrypt/archive/django.sldunit.xyz # Mount actual certificate files
 
     ports:
       # if we will use NGINX as a reserve proxy and for the static files, then Daphne will be on port 8000
