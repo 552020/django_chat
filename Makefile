@@ -11,19 +11,19 @@ help:
 
 # Run for Development (it uses docker-compose.override.yml for dev)
 up-dev:
-	docker-compose up --build
+	docker compose up --build
 
 # Run for Production (without override)
 up-prod:
-	docker-compose -f docker-compose.yml up --build
+	docker compose -f docker-compose.yml up --build
 
 # Stop and remove all containers for Development
 down-dev:
-	docker-compose down
+	docker compose down
 
 # Stop and remove all containers for Production
 down-prod:
-	docker-compose -f docker-compose.yml down
+	docker compose -f docker-compose.yml down
 
 # Clean up Docker containers and images
 clean:
