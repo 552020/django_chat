@@ -7,8 +7,8 @@ cd /srv/django_chat
 git pull origin main
 
 # Bring down any existing containers
-make down
+make down-prod
 
 # Rebuild and start the full Docker environment (Django + Redis)
-make up
+make up-prod
 
