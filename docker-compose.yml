@@ -1,7 +1,9 @@
 services:
   web:
     build: ./src/backend
-    command: sh -c "python manage.py migrate && daphne -b 0.0.0.0 -p 443 --ssl-key /etc/ssl/certs/privkey.pem --ssl-cert /etc/ssl/certs/fullchain.pem websocket_demo.asgi:application"
+    # command: sh -c "python manage.py migrate && daphne -b 0.0.0.0 -p 443 --ssl-key /etc/ssl/certs/privkey.pem --ssl-cert /etc/ssl/certs/fullchain.pem websocket_demo.asgi:application"
+    command: sh -c "python manage.py migrate && daphne -e ssl:443:privateKey=/etc/ssl/certs/privkey.pem:certKey=/etc/ssl/certs/fullchain.pem websocket_demo.asgi:application"
+
     volumes:
       - ./src/backend:/app
       - /etc/letsencrypt/live/django.sldunit.xyz:/etc/ssl/certs # Mounting SSL certificates

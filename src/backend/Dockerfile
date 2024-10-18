@@ -24,4 +24,5 @@ EXPOSE 80
 EXPOSE 443
 
 # Command to run the application using Daphne (ASGI server for WebSockets) with SSL #Fallback: overriden by docker-compose
-CMD ["sh", "-c", "python manage.py migrate && daphne -b 0.0.0.0 -p 443 --ssl-key /etc/ssl/certs/privkey.pem --ssl-cert /etc/ssl/certs/fullchain.pem websocket_demo.asgi:application"]
+# CMD ["sh", "-c", "python manage.py migrate && daphne -b 0.0.0.0 -p 443 --ssl-key /ejc/ssl/certs/privkey.pem --ssl-cert /etc/ssl/certs/fullchain.pem websocket_demo.asgi:application"]
+CMD ["sh", "-c", "python manage.py migrate && daphne -e ssl:443:privateKey=/etc/ssl/certs/privkey.pem:certKey=/etc/ssl/certs/fullchain.pem websocket_demo.asgi:application"]
