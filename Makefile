@@ -17,7 +17,8 @@ build_backend:
 
 # Run the backend container only
 run_backend: build_backend
-	docker run -p 8000:8000 django_chat
+# docker run -p 8000:8000 django_chat
+	docker run  -p 80:80 django_chat
 
 # Bring up the full Docker Compose environment (Django + Redis)
 up:

@@ -19,7 +19,8 @@ RUN pip install -r requirements.txt
 COPY . /app/
 
 # Expose the port on which Django will run
-EXPOSE 8000
+# EXPOSE 8000
+EXPOSE 80
 
 # Command to run the application using Daphne (ASGI server for WebSockets)
-CMD ["sh", "-c", "python manage.py migrate && daphne -b 0.0.0.0 -p 8000 websocket_demo.asgi:application"]
+CMD ["sh", "-c", "python manage.py migrate && daphne -b 0.0.0.0 -p 80 websocket_demo.asgi:application"]

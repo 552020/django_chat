@@ -1,11 +1,12 @@
 services:
   web:
     build: ./src/backend
-    command: sh -c "python manage.py migrate && daphne -b 0.0.0.0 -p 8000 websocket_demo.asgi:application"
+    command: sh -c "python manage.py migrate && daphne -b 0.0.0.0 -p 80 websocket_demo.asgi:application"
     volumes:
       - ./src/backend:/app
     ports:
-      - "8000:8000"
+      # - "8000:8000"
+      - "80:80"
     depends_on:
       - redis
     environment:
