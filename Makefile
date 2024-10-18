@@ -4,7 +4,8 @@
 help:
 	@echo "Available commands:"
 	@echo "  make up-dev         - Start the development environment"
-	@echo "  make up-prod        - Start the production environment"
+	@echo "  make up-prod        - Start the production environment in detached mode"
+	@echo "  make logs-prod      - View logs for the production environment"
 	@echo "  make down-dev       - Stop and remove containers in development"
 	@echo "  make down-prod      - Stop and remove containers in production"
 	@echo "  make clean          - Remove Docker containers and images"
@@ -13,9 +14,13 @@ help:
 up-dev:
 	docker compose up --build
 
-# Run for Production (without override)
+# Run for Production (without override) in detached mode
 up-prod:
-	docker compose -f docker-compose.yml up --build
+	docker compose -f docker-compose.yml up --build -d
+
+# View logs for Production
+logs-prod:
+	docker compose -f docker-compose.yml logs -f
 
 # Stop and remove all containers for Development
 down-dev:
