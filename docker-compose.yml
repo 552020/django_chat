@@ -1,16 +1,13 @@
 services:
   web:
     build: ./src/backend
-
-    command: sh -c "python /app/backend/manage.py migrate && python /app/backend/manage.py collectstatic --noinput && daphne -e ssl:443:privateKey=/etc/ssl/certs/privkey.pem:certKey=/etc/ssl/certs/fullchain.pem backend.websocket_demo.asgi:application"
-
+    command: sh -c "python manage.py migrate && python manage.py collectstatic --noinput && daphne -e ssl:443:privateKey=/etc/ssl/certs/privkey.pem:certKey=/etc/ssl/certs/fullchain.pem websocket_demo.asgi:application"
     volumes:
       - ./src:/app # Mount the entire src directory
       - /etc/letsencrypt/live/django.sldunit.xyz:/etc/ssl/certs # Mounting SSL symbolic links
       - /etc/letsencrypt/archive/django.sldunit.xyz:/etc/letsencrypt/archive/django.sldunit.xyz # Mount actual certificate files
     ports:
-      - "80:80"
-      - "443:443"
+      - "8000"
     depends_on:
       - redis
     environment:
@@ -19,6 +16,20 @@ services:
       - ALLOWED_HOSTS=${ALLOWED_HOSTS}
       - SECRET_KEY=${SECRET_KEY}
       - ENVIRONMENT=${ENVIRONMENT}
+
+  ngnix:
+    - image: nginx:${NGINX_VERSION} # Use the version from the .env file
+    - ports:
+        - "80:80"
+        - "443:443"
+    - volumes:
+        - ./src/frontend:/usr/share/nginx/html # Frontend files to serve
+        - ./src/frontend/nginx:/etc/nginx/conf.d
+        - /etc/letsencrypt/live/django.sldunit.xyz:/etc/ssl/certs
+        - /etc/letsencrypt/archive/django.sldunit.xyz:/etc/letsencrypt/archive/django.sldunit.xyz
+    - depends_on:
+        - web
+
   redis:
     image: "redis:7"
     ports:
