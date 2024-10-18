@@ -1,12 +1,16 @@
 services:
   web:
     build: ./src/backend
-    command: sh -c "python manage.py migrate && daphne -b 0.0.0.0 -p 80 websocket_demo.asgi:application"
+    command: sh -c "python manage.py migrate && daphne -b 0.0.0.0 -p 443 --ssl-key /etc/ssl/certs/privkey.pem --ssl-cert /etc/ssl/certs/fullchain.pem websocket_demo.asgi:application"
     volumes:
       - ./src/backend:/app
+      - /etc/letsencrypt/live/django.sldunit.xyz:/etc/ssl/certs # Mounting SSL certificates
+
     ports:
+      # if we will use NGINX as a reserve proxy and for the static files, then Daphne will be on port 8000
       # - "8000:8000"
-      - "80:80"
+      # - "80:80"
+      - "443:443"
     depends_on:
       - redis
     environment:

@@ -21,6 +21,7 @@ COPY . /app/
 # Expose the port on which Django will run
 # EXPOSE 8000
 EXPOSE 80
+EXPOSE 443
 
-# Command to run the application using Daphne (ASGI server for WebSockets)
-CMD ["sh", "-c", "python manage.py migrate && daphne -b 0.0.0.0 -p 80 websocket_demo.asgi:application"]
+# Command to run the application using Daphne (ASGI server for WebSockets) with SSL #Fallback: overriden by docker-compose
+CMD ["sh", "-c", "python manage.py migrate && daphne -b 0.0.0.0 -p 443 --ssl-key /etc/ssl/certs/privkey.pem --ssl-cert /etc/ssl/certs/fullchain.pem websocket_demo.asgi:application"]
