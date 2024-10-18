@@ -81,9 +81,12 @@ TEMPLATES = [
     },
 ]
 
-WSGI_APPLICATION = "websocket_demo.wsgi.application"
+WSGI_APPLICATION = "backend.websocket_demo.wsgi.application"
+ASGI_APPLICATION = "backend.websocket_demo.asgi.application"
 
-ASGI_APPLICATION = "websocket_demo.asgi.application"
+# WSGI_APPLICATION = "websocket_demo.wsgi.application"
+# ASGI_APPLICATION = "websocket_demo.asgi.application"
+
 CHANNEL_LAYERS = {
     "default": {
         "BACKEND": "channels_redis.core.RedisChannelLayer",
@@ -150,7 +153,7 @@ else:
 
 STATIC_ROOT = os.path.join(BASE_DIR, "staticfiles")
 STATICFILES_DIRS = [
-    os.path.join(BASE_DIR, "src", "backend", "chat", "static"),
+    os.path.join(BASE_DIR.parent, "src", "backend", "chat", "static"),
     os.path.join(BASE_DIR, "frontend", "static"),  # Frontend static files
 ]
 
