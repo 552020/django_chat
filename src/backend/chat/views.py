@@ -7,3 +7,7 @@ def index(request):
 
 def room(request, room_name):
     return render(request, "chat/room.html", {"room_name": room_name})
+
+
+def image_view(request, room_name):
+    return render(request, "chat/image.html")
