@@ -1,34 +1,30 @@
-# Makefile for managing Docker builds, tests, and containers
+.PHONY: help build_backend run_backend run_docker_compose clean
 
-.PHONY: help build_backend run_backend up down clean
-
-# Show all available make commands
+# Show available commands
 help:
 	@echo "Available commands:"
-	@echo "  make build_backend           - Build the backend Docker image"
-	@echo "  make run_backend             - Run the backend container only"
-	@echo "  make up                      - Bring up the full Docker Compose environment (Django + Redis)"
-	@echo "  make down                    - Bring down the Docker Compose environment"
-	@echo "  make clean                   - Remove Docker containers and images"
+	@echo "  make up-dev         - Start the development environment"
+	@echo "  make up-prod        - Start the production environment"
+	@echo "  make down-dev       - Stop and remove containers in development"
+	@echo "  make down-prod      - Stop and remove containers in production"
+	@echo "  make clean          - Remove Docker containers and images"
 
-# Build the backend Docker image
-build_backend:
-	docker build -t django_chat ./src/backend
+# Run for Development (it uses docker-compose.override.yml for dev)
+up-dev:
+	docker-compose up --build
 
-# Run the backend container only
-run_backend: build_backend
-	docker run -p 443:443 -p 80:80 django_chat
+# Run for Production (without override)
+up-prod:
+	docker-compose -f docker-compose.yml up --build
 
+# Stop and remove all containers for Development
+down-dev:
+	docker-compose down
 
-# Bring up the full Docker Compose environment (Django + Redis)
-up:
-	docker compose up --build
-
-# Bring down the Docker Compose environment
-down:
-	docker compose down
+# Stop and remove all containers for Production
+down-prod:
+	docker-compose -f docker-compose.yml down
 
 # Clean up Docker containers and images
 clean:
-	docker compose down
 	docker system prune -f
