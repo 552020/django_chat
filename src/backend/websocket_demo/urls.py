@@ -17,8 +17,14 @@ Including another URLconf
 
 from django.contrib import admin
 from django.urls import include, path
+from django.views.generic import TemplateView
+
 
 urlpatterns = [
     path("admin/", admin.site.urls),
-    path("chat/", include("chat.urls")),
+    path("chat/", include("chat.urls")),  # Chat routes still handled by Django
+    # path("", TemplateView.as_view(template_name="frontend/index.html"), name="home"),
+    path(
+        "", TemplateView.as_view(template_name="index.html"), name="home"
+    ),  # Serving the frontend index.html
 ]

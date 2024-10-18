@@ -1,6 +1,6 @@
 services:
   web:
-    command: sh -c "python manage.py migrate && python manage.py runserver 0.0.0.0:8000"
+    command: sh -c "python /app/backend/manage.py migrate && python /app/backend/manage.py runserver 0.0.0.0:8000"
     ports:
       - "8000:8000"
     environment:

@@ -67,7 +67,8 @@ ROOT_URLCONF = "websocket_demo.urls"
 TEMPLATES = [
     {
         "BACKEND": "django.template.backends.django.DjangoTemplates",
-        "DIRS": [],
+        # "DIRS": [],
+        "DIRS": [os.path.join(BASE_DIR.parent, "frontend")],  # Add frontend directory
         "APP_DIRS": True,
         "OPTIONS": {
             "context_processors": [
@@ -150,6 +151,7 @@ else:
 STATIC_ROOT = os.path.join(BASE_DIR, "staticfiles")
 STATICFILES_DIRS = [
     os.path.join(BASE_DIR, "src", "backend", "chat", "static"),
+    os.path.join(BASE_DIR, "frontend", "static"),  # Frontend static files
 ]
 
 # Default primary key field type
