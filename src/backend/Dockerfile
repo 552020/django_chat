@@ -19,10 +19,8 @@ RUN pip install -r requirements.txt
 COPY . /app/
 
 # Expose the port on which Django will run
-# EXPOSE 8000
-EXPOSE 80
-EXPOSE 443
+# Ports are exposed in docker-compose.yml
 
-# Command to run the application using Daphne (ASGI server for WebSockets) with SSL #Fallback: overriden by docker-compose
-# CMD ["sh", "-c", "python manage.py migrate && daphne -b 0.0.0.0 -p 443 --ssl-key /ejc/ssl/certs/privkey.pem --ssl-cert /etc/ssl/certs/fullchain.pem websocket_demo.asgi:application"]
-CMD ["sh", "-c", "python manage.py migrate && daphne -e ssl:443:privateKey=/etc/ssl/certs/privkey.pem:certKey=/etc/ssl/certs/fullchain.pem websocket_demo.asgi:application"]
+
+# Generic fallback if Docker Compose doesn't override the command
+CMD ["sh", "-c", "echo 'Strange! This should not have run!'"]
