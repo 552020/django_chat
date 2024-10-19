@@ -6,7 +6,7 @@ services:
 
     volumes:
       - ./src/backend:/app
-      - /etc/letsencrypt/live/django.sldunit.xyz:/etc/ssl/certs # Mounting SSL symbolic links
+      - /etc/letsencrypt/live/django.sldunit.xyz:/etc/ssl/certs
       - /etc/letsencrypt/archive/django.sldunit.xyz:/etc/letsencrypt/archive/django.sldunit.xyz # Mount actual certificate files
     ports:
       - "8000"
@@ -21,21 +21,20 @@ services:
     networks:
       - django
   ngnix:
+    build: ./src/nginx
+    args:
+      NGINX_VERSION: ${NGINX_VERSION}
     profiles:
       - production # Only build Nginx in the production profile
-    image: nginx:${NGINX_VERSION} # Use the version from the .env file
     ports:
       - "80:80"
       - "443:443"
-    volumes:
-      - ./src/frontend:/usr/share/nginx/html # Frontend files to serve
-      - ./src/nginx:/etc/nginx/conf.d
-      - /etc/letsencrypt/live/django.sldunit.xyz:/etc/ssl/certs
-      - /etc/letsencrypt/archive/django.sldunit.xyz:/etc/letsencrypt/archive/django.sldunit.xyz
     depends_on:
       - web
     networks:
       - django
+    command: ["nginx", "-g", "daemon off;"] # Start Nginx in the foreground
+
   redis:
     image: "redis:7"
     ports:
