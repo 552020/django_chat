@@ -8,7 +8,6 @@ venv/
 env/
 
 # Ignore local development environment files
-*.env
 *.local
 *.DS_Store
 
@@ -29,7 +28,6 @@ docker-compose.override.yml
 node_modules/
 build/
 dist/
-frontend/
 
 # Ignore unnecessary docs
 docs/

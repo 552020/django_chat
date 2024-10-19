@@ -42,6 +42,25 @@ down-prod:
 up-prod-non-det:
 	docker compose -f docker-compose.yml --profile production up --build
 
+# Build the Nginx image
+build-nginx:
+	docker build --no-cache -t django-nginx -f ./src/nginx/Dockerfile ./src
+
+# Run the Nginx container
+run-nginx:
+	docker run --name django-nginx \
+		-v /etc/letsencrypt/live/django.sldunit.xyz:/etc/ssl/certs/ \
+		-v /etc/letsencrypt/archive/django.sldunit.xyz:/etc/letsencrypt/archive/django.sldunit.xyz \
+		-p 80:80 \
+		-p 443:443 \
+		django-nginx
+
+# Stop the Nginx container
+stop-nginx:
+	docker stop django-nginx || true
+	docker rm django-nginx || true
+
+
 # Clean up Docker containers and images
 clean:
 	docker system prune -f

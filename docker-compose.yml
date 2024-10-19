@@ -24,6 +24,9 @@ services:
     build:
       context: ./src
       dockerfile: nginx/Dockerfile
+    volumes:
+      - /etc/letsencrypt/live/django.sldunit.xyz:/etc/ssl/certs/
+      - /etc/letsencrypt/archive/django.sldunit.xyz:/etc/letsencrypt/archive/django.sldunit.xyz
 
     profiles:
       - production # Only build Nginx in the production profile
