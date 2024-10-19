@@ -44,4 +44,4 @@ services:
       - django
 networks:
   django:
-    external: true
+    driver: bridge
