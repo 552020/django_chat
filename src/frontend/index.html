@@ -1,27 +1,31 @@
-<!-- src/frontend/index.html -->
 <!DOCTYPE html>
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Hello Django</title>
-    <style>
-      body {
-        font-family: Arial, sans-serif;
-        text-align: center;
-        margin-top: 50px;
-      }
-
-      button {
-        padding: 10px 20px;
-        font-size: 16px;
-        cursor: pointer;
-      }
-    </style>
+    <title>Pong Game</title>
+    <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="style.css" />
   </head>
   <body>
-    <h1>Hello Django</h1>
-    <p>Welcome to the frontend of the application.</p>
-    <button onclick="window.location.href='/chat/'">Go to Chat Page</button>
+    <div id="container" class="container">
+      <h1>PONG</h1>
+      <div class="button-container">
+        <div class="button-wrapper">
+          <button id="play">PLAY</button>
+        </div>
+        <div class="net">
+          <div class="net-segment black"></div>
+          <div class="net-segment white"></div>
+          <!-- net segments continue -->
+        </div>
+        <div class="button-wrapper">
+          <button id="chat" onclick="window.location.href='/chat/'">CHAT</button>
+        </div>
+      </div>
+    </div>
+    <div id="main-content"></div>
+
+    <script src="script.js"></script>
   </body>
 </html>

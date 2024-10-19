@@ -13,6 +13,10 @@ help:
 	@echo "  make build-nginx        - Build the Nginx Docker image"
 	@echo "  make run-nginx          - Run the Nginx container with mounted SSL certificates"
 	@echo "  make stop-nginx         - Stop and remove the Nginx container"
+	@echo "  make check-live-server  - Check if live-server is installed"
+	@echo "  make install-live-server- Install live-server globally using npm"
+	@echo "  make run-dev            - Run both Django runserver and live-server for development"
+	@echo "  make stop-live-server   - Stop the live-server process"
 	@echo "  make clean              - Remove Docker containers and images"
 	@echo "  make fclean          	 - Clean up Docker volumes, networks, and rebuild"
 	@echo "  make re             	 - Rebuild and restart the containers"
@@ -64,6 +68,33 @@ run-nginx:
 stop-nginx:
 	docker stop django-nginx || true
 	docker rm django-nginx || true
+
+# Check for live-server
+check-live-server:
+	@which live-server > /dev/null || (echo "Error: live-server is not installed. Install it with 'npm install -g live-server'"; exit 1)
+
+# Install live-server if it's not installed globally (optional)
+install-live-server:
+	@npm install -g live-server
+
+# Run live-server for the frontend and Django runserver for the backend
+run-dev: check-live-server
+	# Run live-server in the background (frontend)
+	@echo "Starting live-server for frontend..."
+	@cd src/frontend && live-server --port=3001 --proxy=/chat:http://localhost:8000/chat/ &
+	
+	# Run Django's development server (backend)
+	@echo "Starting Django development server..."
+	python src/backend/manage.py runserver 0.0.0.0:8000
+
+# Stop live-server (optional: in case you want to control stopping processes)
+stop-live-server:
+	@pkill -f live-server || true
+
+# Clean and stop all running dev servers
+stop-dev: stop-live-server
+	@pkill -f runserver || true
+
 
 
 # Clean everything (including volumes and networks)

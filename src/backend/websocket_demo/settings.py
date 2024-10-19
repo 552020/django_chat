@@ -164,7 +164,7 @@ else:
 STATIC_ROOT = os.path.join(BASE_DIR, "staticfiles")
 STATICFILES_DIRS = [
     os.path.join(BASE_DIR, "chat", "static"),
-    os.path.join(BASE_DIR.parent, "frontend"),  # Frontend static files
+    # os.path.join(BASE_DIR.parent, "frontend"),  # Frontend static files
 ]
 
 # Default primary key field type
