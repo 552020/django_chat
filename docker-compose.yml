@@ -18,6 +18,8 @@ services:
       - ALLOWED_HOSTS=${ALLOWED_HOSTS}
       - SECRET_KEY=${SECRET_KEY}
       - ENVIRONMENT=${ENVIRONMENT}
+    networks:
+      - django
   ngnix:
     profiles:
       - production # Only build Nginx in the production profile
@@ -32,7 +34,14 @@ services:
       - /etc/letsencrypt/archive/django.sldunit.xyz:/etc/letsencrypt/archive/django.sldunit.xyz
     depends_on:
       - web
+    networks:
+      - django
   redis:
     image: "redis:7"
     ports:
       - "6379:6379"
+    networks:
+      - django
+networks:
+  django:
+    external: true
