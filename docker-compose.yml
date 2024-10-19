@@ -22,7 +22,7 @@ services:
       - django
   ngnix:
     build:
-      constext: ./src/nginx
+      context: ./src/nginx
 
     profiles:
       - production # Only build Nginx in the production profile
