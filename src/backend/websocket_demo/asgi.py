@@ -19,7 +19,7 @@ from django.core.asgi import get_asgi_application
 print(f"DJANGO_SETTINGS_MODULE: {os.environ.get('DJANGO_SETTINGS_MODULE')}")
 
 # os.environ.setdefault("DJANGO_SETTINGS_MODULE", "websocket_demo.settings")
-os.environ.setdefault("DJANGO_SETTINGS_MODULE", "backend.websocket_demo.settings")
+os.environ.setdefault("DJANGO_SETTINGS_MODULE", "websocket_demo.settings")
 
 
 # Initialize Django ASGI application early to ensure the AppRegistry
