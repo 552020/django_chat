@@ -22,8 +22,6 @@ services:
       - django
   ngnix:
     build: ./src/nginx
-    args:
-      NGINX_VERSION: ${NGINX_VERSION}
     profiles:
       - production # Only build Nginx in the production profile
     ports:
