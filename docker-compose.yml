@@ -17,6 +17,8 @@ services:
       - SECRET_KEY=${SECRET_KEY}
       - ENVIRONMENT=${ENVIRONMENT}
   ngnix:
+    profiles:
+      - production # Only build Nginx in the production profile
     image: nginx:${NGINX_VERSION} # Use the version from the .env file
     ports:
       - "80:80"

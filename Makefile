@@ -23,7 +23,8 @@ up-dev:
 
 # Run for Production (without override) in detached mode
 up-prod:
-	docker compose -f docker-compose.yml up --build -d
+	docker compose -f docker-compose.yml --profile production up --build -d
+
 
 # View logs for Production
 logs-prod:
@@ -39,7 +40,7 @@ down-prod:
 
 # Run for Production (non-detached mode to view logs directly)
 up-prod-non-det:
-	docker compose -f docker-compose.yml up --build
+	docker compose -f docker-compose.yml --profile production up --build
 
 # Clean up Docker containers and images
 clean:
