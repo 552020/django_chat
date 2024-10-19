@@ -8,14 +8,16 @@ ENV PYTHONUNBUFFERED=1
 # Set the working directory in the container
 WORKDIR /app
 
-# Copy the requirements.txt file
+# Copy the requirements.txt from the backend directory
 COPY requirements.txt /app/
+
 
 # Install dependencies
 RUN pip install --upgrade pip
 RUN pip install -r requirements.txt
 
 # Copy the entire project directory to the container
+# TODO: This is not the best practice, but it's fine for now
 COPY . /app/
 
 # Expose the port on which Django will run

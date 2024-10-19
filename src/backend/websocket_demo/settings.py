@@ -64,11 +64,20 @@ MIDDLEWARE = [
 
 ROOT_URLCONF = "websocket_demo.urls"
 
+# Define the value for DIRS based on the environment
+print(f"ENVIRONMENT: {ENVIRONMENT}")
+
+if ENVIRONMENT == "development":
+    template_dirs = [os.path.join(BASE_DIR.parent, "frontend")]
+else:
+    template_dirs = []
+print(f"template_dirs: {template_dirs}")
+
 TEMPLATES = [
     {
         "BACKEND": "django.template.backends.django.DjangoTemplates",
-        # "DIRS": [],
-        "DIRS": [os.path.join(BASE_DIR.parent, "frontend")],  # Add frontend directory
+        "DIRS": template_dirs,
+        # "DIRS": [os.path.join(BASE_DIR.parent, "frontend")],  # Add frontend directory
         "APP_DIRS": True,
         "OPTIONS": {
             "context_processors": [
@@ -81,8 +90,9 @@ TEMPLATES = [
     },
 ]
 
-WSGI_APPLICATION = "backend.websocket_demo.wsgi.application"
-ASGI_APPLICATION = "backend.websocket_demo.asgi.application"
+
+WSGI_APPLICATION = "websocket_demo.wsgi.application"
+ASGI_APPLICATION = "websocket_demo.asgi.application"
 
 # WSGI_APPLICATION = "websocket_demo.wsgi.application"
 # ASGI_APPLICATION = "websocket_demo.asgi.application"
@@ -153,8 +163,8 @@ else:
 
 STATIC_ROOT = os.path.join(BASE_DIR, "staticfiles")
 STATICFILES_DIRS = [
-    os.path.join(BASE_DIR.parent, "src", "backend", "chat", "static"),
-    os.path.join(BASE_DIR, "frontend", "static"),  # Frontend static files
+    os.path.join(BASE_DIR, "chat", "static"),
+    os.path.join(BASE_DIR.parent, "frontend"),  # Frontend static files
 ]
 
 # Default primary key field type
