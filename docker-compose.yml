@@ -21,7 +21,9 @@ services:
     networks:
       - django
   ngnix:
-    build: ./src/nginx
+    build:
+      constext: ./src/nginx
+
     profiles:
       - production # Only build Nginx in the production profile
     ports:
