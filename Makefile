@@ -14,6 +14,8 @@ help:
 	@echo "  make run-nginx          - Run the Nginx container with mounted SSL certificates"
 	@echo "  make stop-nginx         - Stop and remove the Nginx container"
 	@echo "  make clean              - Remove Docker containers and images"
+	@echo "  make fclean          	 - Clean up Docker volumes, networks, and rebuild"
+	@echo "  make re             	 - Rebuild and restart the containers"
 
 # Run Django runserver directly for development (faster iteration)
 runserver-dev:
@@ -63,6 +65,14 @@ stop-nginx:
 	docker stop django-nginx || true
 	docker rm django-nginx || true
 
+
+# Clean everything (including volumes and networks)
+fclean:
+	docker compose down --volumes --remove-orphans
+	docker system prune --volumes -f
+
+# Rebuild and restart everything
+re: fclean up-prod
 
 # Clean up Docker containers and images
 clean:
