@@ -22,7 +22,8 @@ services:
       - django
   ngnix:
     build:
-      context: ./src/nginx
+      context: ./src
+      dockerfile: nginx/Dockerfile
 
     profiles:
       - production # Only build Nginx in the production profile
