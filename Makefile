@@ -3,14 +3,17 @@
 # Show available commands
 help:
 	@echo "Available commands:"
-	@echo "  make runserver-dev  - Start Django's runserver directly for faster development"
-	@echo "  make up-dev         - Start the development environment"
-	@echo "  make up-prod        - Start the production environment in detached mode"
-	@echo "  make logs-prod      - View logs for the production environment"
-	@echo "  make up-prod-non-det - Start the production environment in non-detached mode (view logs)"
-	@echo "  make down-dev       - Stop and remove containers in development"
-	@echo "  make down-prod      - Stop and remove containers in production"
-	@echo "  make clean          - Remove Docker containers and images"
+	@echo "  make runserver-dev      - Start Django's runserver directly for faster development"
+	@echo "  make up-dev             - Start the development environment (Docker Compose with development settings)"
+	@echo "  make up-prod            - Start the production environment in detached mode"
+	@echo "  make logs-prod          - View logs for the production environment"
+	@echo "  make up-prod-non-det    - Start the production environment in non-detached mode (view logs)"
+	@echo "  make down-dev           - Stop and remove containers in development"
+	@echo "  make down-prod          - Stop and remove containers in production"
+	@echo "  make build-nginx        - Build the Nginx Docker image"
+	@echo "  make run-nginx          - Run the Nginx container with mounted SSL certificates"
+	@echo "  make stop-nginx         - Stop and remove the Nginx container"
+	@echo "  make clean              - Remove Docker containers and images"
 
 # Run Django runserver directly for development (faster iteration)
 runserver-dev:
