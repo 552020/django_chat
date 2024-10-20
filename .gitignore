@@ -41,3 +41,9 @@ build/
 
 # Environment variables
 .env
+
+# Ignore node_modules directories
+node_modules/
+
+# Ignore build output
+dist/

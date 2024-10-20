@@ -72,3 +72,7 @@ button:hover {
   background-color: white;
   color: black;
 }
+
+.threejs-wrapper {
+  margin-top: 20px;
+}

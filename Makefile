@@ -82,6 +82,10 @@ run-dev: check-live-server
 	# Run live-server in the background (frontend)
 	@echo "Starting live-server for frontend..."
 	@cd src/frontend && live-server --port=3001 --proxy=/chat:http://localhost:8000/chat/ &
+
+	# Run Vite dev server for Three.js (in the threejs folder)
+	@echo "Starting Vite development server for Three.js..."
+	@cd src/frontend/threejs/11-materials && npm install && npm run dev &
 	
 	# Run Django's development server (backend)
 	@echo "Starting Django development server..."
