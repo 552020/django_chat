@@ -1,9 +1,17 @@
 services:
-  web:
-    volumes:
-      - ./src/frontend:/frontend
+  django:
     command: sh -c "python /app/manage.py migrate && python /app/manage.py runserver 0.0.0.0:8000"
     ports:
       - "8000:8000"
     environment:
       - DEBUG=True
+  nginx:
+    build:
+      context: ./src
+      dockerfile: nginx/Dockerfile
+      args:
+        ENVIRONMENT: ${ENVIRONMENT} # Pass the environment as a build argument
+    ports:
+      - "8080:80" # Expose Nginx on port 8080
+    environment:
+      - ENVIRONMENT=development

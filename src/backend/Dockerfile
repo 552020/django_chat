@@ -11,7 +11,6 @@ WORKDIR /app
 # Copy the requirements.txt from the backend directory
 COPY requirements.txt /app/
 
-
 # Install dependencies
 RUN pip install --upgrade pip
 RUN pip install -r requirements.txt
@@ -19,10 +18,6 @@ RUN pip install -r requirements.txt
 # Copy the entire project directory to the container
 # TODO: This is not the best practice, but it's fine for now
 COPY . /app/
-
-# Expose the port on which Django will run
-# Ports are exposed in docker-compose.yml
-
 
 # Generic fallback if Docker Compose doesn't override the command
 CMD ["sh", "-c", "echo 'Strange! This should not have run!'"]

@@ -1,50 +1,64 @@
 services:
-  web:
-    build: ./src/backend
-    # command: sh -c "python manage.py migrate && python manage.py collectstatic --noinput && daphne -e ssl:443:privateKey=/etc/ssl/certs/privkey.pem:certKey=/etc/ssl/certs/fullchain.pem websocket_demo.asgi:application"
-    command: sh -c "python manage.py migrate && python manage.py collectstatic --noinput && daphne -b 0.0.0.0 -p 8000 websocket_demo.asgi:application"
-
+  redis:
+    image: "redis:7"
+    ports:
+      - "6379:6379"
+    networks:
+      - transcendence_network
+  postgres:
+    image: "postgres:16"
+    environment:
+      - POSTGRES_USER=${POSTGRES_USER}
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
+      - POSTGRES_DB=${POSTGRES_DB}
     volumes:
+      - ${POSTGRES_DATA}:/var/lib/postgresql/data
+    ports:
+      - "5432:5432"
+    networks:
+      - transcendence_network
+  django:
+    build: ./src/backend
+    command: sh -c "python manage.py migrate && python manage.py collectstatic --noinput && daphne -b 0.0.0.0 -p 8000 websocket_demo.asgi:application"
+    volumes:
+      # Probably we don't want to have them as volumes in production
       - ./src/backend:/app
       - /etc/letsencrypt/live/django.sldunit.xyz:/etc/ssl/certs
-      - /etc/letsencrypt/archive/django.sldunit.xyz:/etc/letsencrypt/archive/django.sldunit.xyz # Mount actual certificate files
+      - /etc/letsencrypt/archive/django.sldunit.xyz:/etc/letsencrypt/archive/django.sldunit.xyz
     ports:
       - "8000"
     depends_on:
       - redis
+      - postgres
     environment:
       - Debug=False
       - REDIS_URL=redis://redis:6379/1
       - ALLOWED_HOSTS=${ALLOWED_HOSTS}
       - SECRET_KEY=${SECRET_KEY}
       - ENVIRONMENT=${ENVIRONMENT}
+      - DATABASE_URL=${DATABASE_URL}
     networks:
-      - django
+      - transcendence_network
   ngnix:
     build:
       context: ./src
       dockerfile: nginx/Dockerfile
+      args:
+        ENVIRONMENT: ${ENVIRONMENT}
     volumes:
       - /etc/letsencrypt/live/django.sldunit.xyz:/etc/ssl/certs/
       - /etc/letsencrypt/archive/django.sldunit.xyz:/etc/letsencrypt/archive/django.sldunit.xyz
-
-    profiles:
-      - production # Only build Nginx in the production profile
     ports:
       - "80:80"
       - "443:443"
+    environment:
+      - ENVIRONMENT=production
     depends_on:
-      - web
-    networks:
       - django
+    networks:
+      - transcendence_network
     command: ["nginx", "-g", "daemon off;"] # Start Nginx in the foreground
 
-  redis:
-    image: "redis:7"
-    ports:
-      - "6379:6379"
-    networks:
-      - django
 networks:
-  django:
+  transcendence_network:
     driver: bridge

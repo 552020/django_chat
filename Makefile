@@ -3,7 +3,6 @@
 # Show available commands
 help:
 	@echo "Available commands:"
-	@echo "  make runserver-dev      - Start Django's runserver directly for faster development"
 	@echo "  make up-dev             - Start the development environment (Docker Compose with development settings)"
 	@echo "  make up-prod            - Start the production environment in detached mode"
 	@echo "  make logs-prod          - View logs for the production environment"
@@ -13,17 +12,13 @@ help:
 	@echo "  make build-nginx        - Build the Nginx Docker image"
 	@echo "  make run-nginx          - Run the Nginx container with mounted SSL certificates"
 	@echo "  make stop-nginx         - Stop and remove the Nginx container"
+	@echo "  make run-dev            - Run both Django runserver and live-server for development"
 	@echo "  make check-live-server  - Check if live-server is installed"
 	@echo "  make install-live-server- Install live-server globally using npm"
-	@echo "  make run-dev            - Run both Django runserver and live-server for development"
 	@echo "  make stop-live-server   - Stop the live-server process"
 	@echo "  make clean              - Remove Docker containers and images"
 	@echo "  make fclean          	 - Clean up Docker volumes, networks, and rebuild"
 	@echo "  make re             	 - Rebuild and restart the containers"
-
-# Run Django runserver directly for development (faster iteration)
-runserver-dev:
-	python src/backend/manage.py runserver 0.0.0.0:8000
 
 
 # Run for Development (it uses docker-compose.override.yml for dev)
@@ -32,7 +27,7 @@ up-dev:
 
 # Run for Production (without override) in detached mode
 up-prod:
-	docker compose -f docker-compose.yml --profile production up --build -d
+	docker compose -f docker-compose.yml up --build -d
 
 
 # View logs for Production
@@ -49,7 +44,7 @@ down-prod:
 
 # Run for Production (non-detached mode to view logs directly)
 up-prod-non-det:
-	docker compose -f docker-compose.yml --profile production up --build
+	docker compose -f docker-compose.yml up --build
 
 # Build the Nginx image
 build-nginx:
@@ -86,6 +81,10 @@ run-dev: check-live-server
 	# Run Vite dev server for Three.js (in the threejs folder)
 	@echo "Starting Vite development server for Three.js..."
 	@cd src/frontend/threejs/11-materials && npm install && npm run dev &
+
+	# Start Redis in Docker (if not already running)
+	@echo "Starting Redis in Docker..."
+	docker run --name redis-dev -p 6379:6379 -d redis:latest || echo "Redis is already running."
 	
 	# Run Django's development server (backend)
 	@echo "Starting Django development server..."
