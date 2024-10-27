@@ -1,7 +1,9 @@
+"""Views for user authentication and management."""
+
+import json
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
-from .serializers import UserSerializer
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.models import User
 from django.http import JsonResponse
@@ -9,7 +11,7 @@ from django.views.decorators.csrf import csrf_exempt
 from django.contrib.auth.hashers import make_password
 from django.utils.decorators import method_decorator
 from django.views import View
-import json
+from .serializers import UserSerializer
 
 
 # Helper function to return JSON responses with errors or success messages
