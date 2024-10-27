@@ -19,3 +19,9 @@ webdriver-manager>=4.0.0
 # To let daphne serve static files with TLS
 Twisted[tls,http2]
 
+# Django REST Framework
+djangorestframework>=3.15.2
+
+# Added for PostgreSQL connection in local development
+psycopg2-binary==2.9.10  
+

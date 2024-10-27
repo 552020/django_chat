@@ -11,6 +11,7 @@ VENV_PATH ?= $(shell for dir in $(POSSIBLE_VENVS); do \
                     fi; \
                  done)
 
+# Function to load .env file if it exists
 # Show available commands
 help:
 	@echo "Available commands:"
@@ -34,8 +35,15 @@ help:
 	@echo "  make re             	 - Rebuild and restart the containers"
 
 
+load_env:
+	@if [ -f .env ]; then \
+		echo "Loading environment variables from .env"; \
+		set -a; source .env; set +a; \
+	fi
+
+
 # Run Django development server and Redis (Dockerized Redis)
-rundev: check_venv install_dependencies check-live-server migrate run_docker_redis run_backend start-live-server start-vite-dev-server
+rundev: load_env check_venv install_dependencies check-live-server run_docker_redis run_docker_postgres migrate  run_backend start-live-server start-vite-dev-server
 
 # Re-run the development environment with a clean Redis setup
 re-rundev: stop_docker_redis_clean rundev
@@ -74,11 +82,27 @@ install_dependencies: check_venv
 
 # Run Django development server
 run_backend: check_venv
-	@echo "Starting Django development server..."
-	python src/backend/manage.py runserver 127.0.0.1:8000
+	@echo "Starting Django development server with POSTGRES_HOST=localhost..."
+# python src/backend/manage.py runserver 127.0.0.1:8000
+	@export POSTGRES_HOST=localhost && $(VENV_PATH)/bin/python src/backend/manage.py runserver 127.0.0.1:8000
 
 
-# Start Redis in Docker
+# Run PostgreSQL in Docker for Development
+run_docker_postgres:
+	@echo "Starting PostgreSQL server in Docker..."
+	@if docker ps -a --filter "name=postgres-dev" | grep "postgres-dev"; then \
+		echo "Postgres container already exists. Starting it..."; \
+		docker start postgres-dev; \
+	else \
+		docker run --name postgres-dev -e POSTGRES_DB=$(POSTGRES_DB) \
+			-e POSTGRES_USER=$(POSTGRES_USER) -e POSTGRES_PASSWORD=$(POSTGRES_PASSWORD) \
+			-p 5432:5432 -d postgres:16; \
+	fi
+	@echo "Waiting for PostgreSQL to be ready..."
+	@sleep 5  # Adjust this delay if necessary
+
+
+# Start Redis in Docker for Development
 run_docker_redis:
 	@echo "Starting Redis server in Docker..."
 	@if docker ps -a --filter "name=redis-dev" | grep "redis-dev"; then \
