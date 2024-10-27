@@ -23,6 +23,7 @@ help:
 
 # Run for Development (it uses docker-compose.override.yml for dev)
 up-dev:
+# docker compose up --build
 	docker compose up --build
 
 # Run for Production (without override) in detached mode
@@ -63,6 +64,21 @@ run-nginx:
 stop-nginx:
 	docker stop django-nginx || true
 	docker rm django-nginx || true
+
+# Run Nginx container for development
+run-nginx-dev:
+	docker rm -f django-nginx-dev || true
+	docker build --no-cache -t django-nginx-dev -f ./src/nginx/Dockerfile ./src --build-arg ENVIRONMENT=development-nginx
+	docker run --name django-nginx-dev \
+		-p 8080:80 \
+		django-nginx-dev
+
+# Stop the Nginx container for development
+stop-nginx-dev:
+	docker stop django-nginx-dev || true
+	docker rm django-nginx-dev || true
+
+
 
 # Check for live-server
 check-live-server:

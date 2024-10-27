@@ -19,7 +19,7 @@ services:
       - transcendence_network
   django:
     build: ./src/backend
-    command: sh -c "python manage.py migrate && python manage.py collectstatic --noinput && daphne -b 0.0.0.0 -p 8000 websocket_demo.asgi:application"
+    command: sh -c "python manage.py migrate && python manage.py collectstatic --noinput && daphne -b 0.0.0.0 -p 8000 django_demo.asgi:application"
     volumes:
       # Probably we don't want to have them as volumes in production
       - ./src/backend:/app
