@@ -41,6 +41,7 @@ else:
 
 # Application definition
 INSTALLED_APPS = [
+    "users",
     "daphne",
     "chat",
     "django.contrib.admin",
