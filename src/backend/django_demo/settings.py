@@ -14,7 +14,11 @@ import os
 from pathlib import Path
 from dotenv import load_dotenv
 
-load_dotenv()
+# load_dotenv()
+load_dotenv(override=False)
+
+print(f"POSTGRES_HOST: {os.getenv('POSTGRES_HOST')}")
+print(f"POSTGRES_PORT: {os.getenv('POSTGRES_PORT')}")
 
 ENVIRONMENT = os.getenv("ENVIRONMENT", "development")
 
@@ -39,7 +43,6 @@ else:
 
 # Application definition
 INSTALLED_APPS = [
-    "django_stubs_ext",
     "rest_framework",
     "users",
     "daphne",
@@ -68,11 +71,7 @@ ROOT_URLCONF = "django_demo.urls"
 # Define the value for DIRS based on the environment
 print(f"ENVIRONMENT: {ENVIRONMENT}")
 
-# if ENVIRONMENT == "development":
-# template_dirs = [os.path.join(BASE_DIR.parent, "frontend")]
-# else:
 template_dirs: list[str] = []
-print(f"template_dirs: {template_dirs}")
 
 TEMPLATES = [
     {
@@ -185,4 +184,3 @@ MEDIA_URL = "/media/"
 MEDIA_ROOT = os.path.join(BASE_DIR, "media")
 
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
-

@@ -3,7 +3,7 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Pong Game</title>
+    <title>Pong Game - Welcome</title>
     <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet" />
     <link rel="stylesheet" href="style.css" />
   </head>
@@ -11,31 +11,14 @@
     <div id="container" class="container">
       <h1>PONG</h1>
       <div class="button-container">
-        <div class="button-wrapper">
-          <button id="play">PLAY</button>
-        </div>
-        <div class="net">
-          <div class="net-segment black"></div>
-          <div class="net-segment white"></div>
-          <div class="net-segment black"></div>
-          <div class="net-segment white"></div>
-          <div class="net-segment black"></div>
-          <div class="net-segment white"></div>
-          <div class="net-segment black"></div>
-          <div class="net-segment white"></div>
-          <div class="net-segment black"></div>
-          <div class="net-segment white"></div>
-        </div>
-        <div class="button-wrapper">
-          <button id="chat" onclick="window.location.href='/chat/'">CHAT</button>
-        </div>
-      </div>
-      <div class="button-wrapper threejs-wrapper">
-        <button id="threejs">THREE.JS</button>
+        <button onclick="window.location.href='/signup/'">SIGN UP</button>
+        <button onclick="window.location.href='/login/'">LOG IN</button>
       </div>
     </div>
-    <div id="main-content"></div>
 
-    <script src="script.js"></script>
+    <!-- <script>
+    // Redirect to home if the user is already logged in // document.addEventListener("DOMContentLoaded", function () {
+    // if (document.cookie.includes("logincookie")) { // window.location.href = "/home.html"; // } // });
+     </script> -->
   </body>
 </html>

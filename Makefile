@@ -11,7 +11,6 @@ VENV_PATH ?= $(shell for dir in $(POSSIBLE_VENVS); do \
                     fi; \
                  done)
 
-# Function to load .env file if it exists
 # Show available commands
 help:
 	@echo "Available commands:"

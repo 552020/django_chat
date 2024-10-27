@@ -22,6 +22,8 @@ services:
   django:
     build: ./src/backend
     command: sh -c "python manage.py migrate && python manage.py collectstatic --noinput && daphne -b 0.0.0.0 -p 8000 django_demo.asgi:application"
+    env_file:
+      - ./.env # Reference to .env in the root directory
     volumes:
       # Probably we don't want to have them as volumes in production
       - ./src/backend:/app
@@ -38,7 +40,8 @@ services:
       - ALLOWED_HOSTS=${ALLOWED_HOSTS}
       - SECRET_KEY=${SECRET_KEY}
       - ENVIRONMENT=${ENVIRONMENT}
-      - DATABASE_URL=${DATABASE_URL}
+      - POSTGRES_HOST=postgres
+      - POSTGRES_PORT=5432
     networks:
       - transcendence_network
   ngnix:
