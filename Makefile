@@ -62,20 +62,20 @@ check_venv:
 # Apply migrations
 migrate: check_venv
 	@echo "Applying migrations..."
-	$(VENV_PATH)/bin/python src/backend/django/tr_django/manage.py migrate
+	$(VENV_PATH)/bin/python src/backend/manage.py migrate
 
 # Install project dependencies inside virtual environment and upgrade pip before
 install_dependencies: check_venv
 	@echo "Upgrading pip..."
 	$(VENV_PATH)/bin/pip install --upgrade pip
 	@echo "Installing dependencies..."
-	$(VENV_PATH)/bin/pip install -r src/backend/django/requirements.txt
+	$(VENV_PATH)/bin/pip install -r src/backend/requirements.txt
 
 
 # Run Django development server
 run_backend: check_venv
 	@echo "Starting Django development server..."
-	python src/backend/django/tr_django/manage.py runserver 127.0.0.1:8000
+	python src/backend/manage.py runserver 127.0.0.1:8000
 
 
 # Start Redis in Docker
