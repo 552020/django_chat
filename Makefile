@@ -1,8 +1,23 @@
 .PHONY: help build_backend run_backend run_docker_compose clean
 
+# Define a list of possible virtual environment directories
+POSSIBLE_VENVS = venv .venv env myenv
+
+# Allow passing VENV_PATH as an argument. If not passed, attempt to auto-detect.
+VENV_PATH ?= $(shell for dir in $(POSSIBLE_VENVS); do \
+                    if [ -d "$$dir" ]; then \
+                        echo $$dir; \
+                        break; \
+                    fi; \
+                 done)
+
 # Show available commands
 help:
 	@echo "Available commands:"
+	@echo "  make rundev                  - Start Django development server and Redis (Dockerized Redis)."
+	@echo "                                Use VENV_PATH=<path> to specify a custom virtual environment path."
+	@echo "                                Example: make rundev VENV_PATH=/path/to/your/venv"
+	@echo "  make re-rundev               - Restart Django development server and Redis, removing all Redis data."
 	@echo "  make up-dev             - Start the development environment (Docker Compose with development settings)"
 	@echo "  make up-prod            - Start the production environment in detached mode"
 	@echo "  make logs-prod          - View logs for the production environment"
@@ -12,19 +27,84 @@ help:
 	@echo "  make build-nginx        - Build the Nginx Docker image"
 	@echo "  make run-nginx          - Run the Nginx container with mounted SSL certificates"
 	@echo "  make stop-nginx         - Stop and remove the Nginx container"
-	@echo "  make run-dev            - Run both Django runserver and live-server for development"
 	@echo "  make check-live-server  - Check if live-server is installed"
-	@echo "  make install-live-server- Install live-server globally using npm"
 	@echo "  make stop-live-server   - Stop the live-server process"
 	@echo "  make clean              - Remove Docker containers and images"
 	@echo "  make fclean          	 - Clean up Docker volumes, networks, and rebuild"
 	@echo "  make re             	 - Rebuild and restart the containers"
 
 
+# Run Django development server and Redis (Dockerized Redis)
+rundev: check_venv install_dependencies check-live-server migrate run_docker_redis run_backend start-live-server start-vite-dev-server
+
+# Re-run the development environment with a clean Redis setup
+re-rundev: stop_docker_redis_clean rundev
+
+check_venv:
+	@if [ -z "$(VENV_PATH)" ]; then \
+		echo "It looks like the virtual environment was not found."; \
+		echo "We checked for: $(POSSIBLE_VENVS)."; \
+		echo "Please create a virtual environment with something like:"; \
+		echo "python3 -m venv venv"; \
+		echo "Alternatively, you can specify your virtual environment path when running the Makefile like this:"; \
+		echo "make rundev VENV_PATH=path/to/your/venv"; \
+		exit 1; \
+	fi; \
+	if [ -z "$$VIRTUAL_ENV" ]; then \
+		echo "Error: The virtual environment is not activated."; \
+		echo "Please activate it with:"; \
+		echo "source $(VENV_PATH)/bin/activate"; \
+		exit 1; \
+	else \
+		echo "Virtual environment activated at: $(VENV_PATH)"; \
+	fi
+
+# Apply migrations
+migrate: check_venv
+	@echo "Applying migrations..."
+	$(VENV_PATH)/bin/python src/backend/django/tr_django/manage.py migrate
+
+# Install project dependencies inside virtual environment and upgrade pip before
+install_dependencies: check_venv
+	@echo "Upgrading pip..."
+	$(VENV_PATH)/bin/pip install --upgrade pip
+	@echo "Installing dependencies..."
+	$(VENV_PATH)/bin/pip install -r src/backend/django/requirements.txt
+
+
+# Run Django development server
+run_backend: check_venv
+	@echo "Starting Django development server..."
+	python src/backend/django/tr_django/manage.py runserver 127.0.0.1:8000
+
+
+# Start Redis in Docker
+run_docker_redis:
+	@echo "Starting Redis server in Docker..."
+	@if docker ps -a --filter "name=redis-dev" | grep "redis-dev"; then \
+		echo "Redis container already exists. Starting it..."; \
+		docker start redis-dev; \
+	else \
+		docker run --name redis-dev -p 6379:6379 -d redis; \
+	fi
+
+# Stop Redis Docker container and remove the data (volume is deleted)
+stop_docker_redis_clean:
+	@echo "Stopping Redis server in Docker and removing data..."
+	docker stop redis-dev || true
+	docker rm -v redis-dev || true
+
+
 # Run for Development (it uses docker-compose.override.yml for dev)
 up-dev:
 # docker compose up --build
+	@echo "Starting dockerized development environment..."
 	docker compose up --build
+
+# Stop and remove all containers for Development
+down-dev:
+	@echo "Stopping dockerized development environment..."
+	docker compose down
 
 # Run for Production (without override) in detached mode
 up-prod:
@@ -35,9 +115,7 @@ up-prod:
 logs-prod:
 	docker compose -f docker-compose.yml logs -f
 
-# Stop and remove all containers for Development
-down-dev:
-	docker compose down
+
 
 # Stop and remove all containers for Production
 down-prod:
@@ -79,32 +157,23 @@ stop-nginx-dev:
 	docker rm django-nginx-dev || true
 
 
-
 # Check for live-server
 check-live-server:
 	@which live-server > /dev/null || (echo "Error: live-server is not installed. Install it with 'npm install -g live-server'"; exit 1)
 
-# Install live-server if it's not installed globally (optional)
-install-live-server:
-	@npm install -g live-server
-
 # Run live-server for the frontend and Django runserver for the backend
-run-dev: check-live-server
-	# Run live-server in the background (frontend)
+start-live-server:
+# Run live-server in the background (frontend)
 	@echo "Starting live-server for frontend..."
-	@cd src/frontend && live-server --port=3001 --proxy=/chat:http://localhost:8000/chat/ &
+	@cd src/frontend && live-server --port=8080 --proxy=/chat:http://localhost:8000/chat/ &
 
-	# Run Vite dev server for Three.js (in the threejs folder)
+start-vite-dev-server:
+# Run Vite dev server for Three.js (in the threejs folder)
+# We will remove this later
 	@echo "Starting Vite development server for Three.js..."
 	@cd src/frontend/threejs/11-materials && npm install && npm run dev &
 
-	# Start Redis in Docker (if not already running)
-	@echo "Starting Redis in Docker..."
-	docker run --name redis-dev -p 6379:6379 -d redis:latest || echo "Redis is already running."
-	
-	# Run Django's development server (backend)
-	@echo "Starting Django development server..."
-	python src/backend/manage.py runserver 0.0.0.0:8000
+
 
 # Stop live-server (optional: in case you want to control stopping processes)
 stop-live-server:
