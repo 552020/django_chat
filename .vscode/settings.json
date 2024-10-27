@@ -16,7 +16,12 @@
   "black-formatter.path": [],
   "python.analysis.diagnosticMode": "workspace", // New setting to control diagnostics scope
   "python.analysis.typeCheckingMode": "basic",
-  "python.analysis.diagnosticSeverityOverrides": {},
+  "python.analysis.diagnosticSeverityOverrides": {
+    "reportGeneralTypeIssues": "none",
+    "reportMissingImports": "none",
+    "reportMissingTypeStubs": "none",
+    "reportMissingModuleSource": "none"
+  },
   "python.globalModuleInstallation": true,
   "python.analysis.autoFormatStrings": false,
   "python.analysis.autoImportCompletions": false,
@@ -36,5 +41,10 @@
     "info": "Information"
   },
   "editor.rulers": [120],
-  "makefile.configureOnOpen": false
+  "makefile.configureOnOpen": false,
+  "workbench.colorCustomizations": {
+    "activityBar.background": "#032D5E",
+    "titleBar.activeBackground": "#043F84",
+    "titleBar.activeForeground": "#F6FAFF"
+  }
 }

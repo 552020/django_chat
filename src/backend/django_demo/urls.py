@@ -23,6 +23,7 @@ from django.views.generic import TemplateView
 urlpatterns = [
     path("admin/", admin.site.urls),
     path("chat/", include("chat.urls")),  # Chat routes still handled by Django
+    path("api/users/", include("users.urls")),  # Users routes
     # path("", TemplateView.as_view(template_name="frontend/index.html"), name="home"),
     # path(
     #     "", TemplateView.as_view(template_name="index.html"), name="home"

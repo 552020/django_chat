@@ -44,14 +44,9 @@ class DRFSignupView(APIView):
     def post(self, request):
         serializer = UserSerializer(data=request.data)
         if serializer.is_valid():
-            # Hash the password before saving
-            serializer.validated_data["password"] = make_password(
-                serializer.validated_data["password"]
-            )
-            serializer.save()
-            return Response(
-                {"message": "User created successfully"}, status=status.HTTP_201_CREATED
-            )
+            # Create a new user instance
+            serializer.save(password=make_password(request.data["password"]))
+            return Response({"message": "User created successfully"}, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
@@ -71,11 +66,38 @@ class LoginView(View):
             return json_response(False, "Invalid credentials.")
 
 
+class DRFLoginView(APIView):
+    """
+    DRF view to handle user login.
+    """
+
+    def post(self, request):
+        username = request.data.get("username")
+        password = request.data.get("password")
+        user = authenticate(request, username=username, password=password)
+
+        if user is not None:
+            login(request, user)
+            return Response({"success": True, "message": "Login successful."}, status=status.HTTP_200_OK)
+        else:
+            return Response({"success": False, "message": "Invalid credentials."}, status=status.HTTP_401_UNAUTHORIZED)
+
+
 @method_decorator(csrf_exempt, name="dispatch")
 class LogoutView(View):
     def post(self, request):
         logout(request)
         return json_response(True, "User logged out successfully.")
+
+
+class DRFLogoutView(APIView):
+    """
+    DRF view to handle user logout.
+    """
+
+    def post(self, request):
+        logout(request)
+        return Response({"success": True, "message": "Logout successful."}, status=status.HTTP_200_OK)
 
 
 @method_decorator(csrf_exempt, name="dispatch")
