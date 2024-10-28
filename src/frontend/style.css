@@ -193,3 +193,48 @@ button:hover {
 .modal-content {
   text-align: center;
 }
+
+/* Form Styling */
+.modal-form {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+.modal-form label {
+  font-size: 0.8em;
+  color: white;
+}
+
+.modal-form input {
+  background: none;
+  border: 2px solid white;
+  padding: 10px;
+  color: white;
+  font-family: "Press Start 2P", cursive;
+  font-size: 0.8em;
+}
+
+.modal-form input::placeholder {
+  color: #999;
+  opacity: 0.8;
+  font-family: "Press Start 2P", cursive;
+}
+
+/* Form Button Styling */
+.form-button {
+  background-color: white;
+  color: black;
+  padding: 10px;
+  font-family: "Press Start 2P", cursive;
+  font-size: 0.8em;
+  cursor: pointer;
+  border: 2px solid white;
+  transition: background 0.3s;
+}
+
+.form-button:hover {
+  background-color: black;
+  color: white;
+  border: 2px solid white;
+}
