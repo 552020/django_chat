@@ -144,3 +144,52 @@ button:hover {
   background-color: white;
   color: black;
 }
+
+/* Modal */
+
+/* Modal Overlay (covers the whole screen) */
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  /* background: rgba(0, 0, 0, 0.6); */
+  background: rgba(255, 255, 255, 0.9); /* White overlay, adjust opacity if needed */
+
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  visibility: hidden;
+  opacity: 0;
+  /* opacity: 1; */
+  transition: opacity 0.3s ease;
+  /* z-index: 9999; */
+}
+
+/* Modal Container */
+.modal {
+  background-color: black;
+  color: white;
+  padding: 1.5rem;
+  width: 80%;
+  max-width: 25rem;
+  border: 2px solid white; /* White border */
+  position: relative;
+  border-radius: 0.5rem;
+  box-shadow: 0 0 1rem rgba(255, 255, 255, 0.5); /* Responsive shadow */
+}
+
+/* Close Button */
+.close-btn {
+  position: absolute;
+  top: 0.5rem;
+  right: 0.75rem;
+  font-size: 1.5rem;
+  cursor: pointer;
+}
+
+/* Modal Content */
+.modal-content {
+  text-align: center;
+}
