@@ -1,4 +1,6 @@
 function displayErrorMessage(message) {
+  // This is only for the modal
+  // TODO: cahnge name and make explicit that it's jus for the modal
   const modalContent = document.getElementById("modal-content");
   const errorElement = document.createElement("p");
   errorElement.style.color = "red";
@@ -9,27 +11,38 @@ function displayErrorMessage(message) {
   modalContent.appendChild(errorElement);
 }
 
-// Function to handle form submission and API request
+function displayLogoutError(message) {
+  const logoutButton = document.getElementById("logout-button");
+
+  // Remove any existing error message
+  const existingError = document.getElementById("logout-error");
+  if (existingError) {
+    existingError.remove();
+  }
+
+  // Create a new error message element
+  const errorElement = document.createElement("p");
+  errorElement.id = "logout-error";
+  errorElement.style.color = "red";
+  errorElement.style.marginTop = "10px";
+  errorElement.textContent = message;
+
+  // Insert the error message after the logout button
+  logoutButton.insertAdjacentElement("afterend", errorElement);
+}
+
+// Function to handle form submission for signup/login
 async function handleFormSubmit(event, endpoint) {
   event.preventDefault();
 
   console.log("window.location.origin", window.location.origin);
   console.log("endpoint: ", endpoint);
   const baseUrl = "http://localhost:8080"; // Change to the backend’s correct address and port
-
   const fullEndpoint = `${baseUrl}${endpoint}`;
-
   const form = event.target;
   const formData = new FormData(form);
-  console.log("Full Endpoint:", fullEndpoint); // Log the full endpoint URL
-
-  console.log("formData: ", formData);
-
   const messageElement = document.getElementById("modal-message");
-  console.log("messageElement: ", messageElement);
-
   const data = Object.fromEntries(formData);
-  console.log("data: ", data);
   try {
     const response = await fetch(fullEndpoint, {
       method: "POST",
@@ -47,45 +60,24 @@ async function handleFormSubmit(event, endpoint) {
       console.error("Expected JSON, received something else", err);
       result = {}; // Ensure result is defined even if parsing fails
     }
-
     if (response.ok) {
-      //   const modalContent = document.getElementById("modal-content");
-      //   modalContent.innerHTML = `<p>${result.message || "Signup successful! Redirecting..."}</p>`;
-
-      // Display success message without altering the modal's overall structure
       if (messageElement && result && result.message) {
         messageElement.style.color = "white";
-        messageElement.innerText = `${result.message || "Signup successful! 🎉 Redirecting..."}`;
+        messageElement.innerText = `${result.message || "Signup or Login successful! 🎉 Redirecting..."}`;
       } else {
         console.warn("Element with id 'modal-message' not found in the DOM or result.message is undefined.");
       }
-
-      // Store username in localStorage for easy access across the app
       localStorage.setItem("username", result.username);
-
-      // Hide the form fields only, keeping the modal size consistent
       form.style.display = "none";
-
-      // Close the modal after a delay, to give the user time to read the message
       setTimeout(() => {
         closeModal();
-        loadHomeView(); // Load home view on success
-      }, 4000); // 2-second delay to show success message
+        loadHomeView();
+      }, 2000);
     } else {
-      //   // Error message handling
-      //   messageElement.style.color = "red";
-      //   messageElement.innerText = result.error || "An error occurred. Please try again.";
-      //   // Focus back on username if duplicate username error
-      //   if (result.error === "Username is already taken.") {
-      //     form.querySelector("input[name='username']").focus();
-      //   }
       const errorResult = await response.json();
       displayErrorMessage(errorResult.error || "An error occurred.");
     }
   } catch (error) {
-    // console.error("Error submitting form:", error);
-    // messageElement.style.color = "red";
-    // messageElement.innerText = "There was an issue submitting the form. Please try again.";
     console.error("Error submitting form:", error);
     displayErrorMessage("There was an issue submitting the form. Please try again.");
   }
@@ -127,6 +119,46 @@ function closeModal() {
   }
 }
 
+// Keep this function as the single place for logout logic
+async function handleLogout() {
+  console.log("Attempting to log out...");
+  try {
+    const response = await fetch("/api/users/logout/", {
+      method: "POST",
+      cache: "no-store",
+    });
+    console.log("Logout response status:", response.status);
+
+    if (response.ok) {
+      localStorage.removeItem("username");
+      loadSignupLoginView();
+    } else {
+      const result = await response.json();
+      console.warn("Logout failed:", result);
+      displayLogoutError(result.error || "Logout failed. Please try again.");
+    }
+  } catch (error) {
+    console.error("Logout error:", error);
+    displayLogoutError("An error occurred while logging out. Please try again.");
+  }
+}
+
+// Simplify this to only handle view changes
+async function loadSignupLoginView() {
+  try {
+    const response = await fetch("/index.html");
+    const html = await response.text();
+
+    const parser = new DOMParser();
+    const doc = parser.parseFromString(html, "text/html");
+
+    document.body.innerHTML = doc.body.innerHTML;
+  } catch (error) {
+    console.error("Error loading signup/login view:", error);
+    displayLogoutError("An error occurred while loading the login page.");
+  }
+}
+
 function loadHomeView() {
   // Hide the initial container
   document.getElementById("container").style.display = "none";
@@ -147,6 +179,9 @@ function loadHomeView() {
       const greetingElement = document.getElementById("greeting");
       greetingElement.innerHTML = `Hello ${username}! 👋`;
     }
+
+    // Event listener for the logout button
+    document.getElementById("logout-button").addEventListener("click", handleLogout);
 
     // Add event listener for the "Play" button
     document.getElementById("play").addEventListener("click", function () {
