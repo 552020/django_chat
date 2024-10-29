@@ -39,7 +39,16 @@ class SignupView(View):
 
         # Create and save new user
         user = User.objects.create(username=username, password=make_password(password))
-        return json_response(True, "User created successfully.")
+
+        user = authenticate(request, username=username, password=password)
+        if user is not None:
+            login(request, user)  # This creates the session for the new user
+            # Return success response with username
+            return JsonResponse(
+                {"success": True, "message": "User created and logged in successfully.", "username": username}
+            )
+        # In case authentication fails for some reason, which is rare
+        return json_response(False, "User created, but login failed.")
 
 
 class DRFSignupView(APIView):

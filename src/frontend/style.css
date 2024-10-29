@@ -180,6 +180,12 @@ button:hover {
   box-shadow: 0 0 1rem rgba(255, 255, 255, 0.5); /* Responsive shadow */
 }
 
+.modal-message {
+  color: red; /* Default to red for error messages */
+  font-size: 0.9em;
+  margin-bottom: 1em;
+}
+
 /* Close Button */
 .close-btn {
   position: absolute;

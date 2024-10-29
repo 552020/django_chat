@@ -55,8 +55,11 @@ services:
       - /etc/letsencrypt/archive/django.sldunit.xyz:/etc/letsencrypt/archive/django.sldunit.xyz
       - ./src/frontend:/usr/share/nginx/html
     ports:
-      - "80:80"
-      - "443:443"
+      # - "80:80"
+      # - "443:443"
+      # TODO: Let maybe Jonatahan fix this. Overriding the port manually.
+      # The override file doesn't work.
+      - "8080:80"
     environment:
       - ENVIRONMENT=production
     depends_on:

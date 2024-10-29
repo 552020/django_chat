@@ -28,11 +28,17 @@
         </div>
       </div>
     </div>
+
+    <!-- Main content area where other views will load -->
+    <div id="main-content" style="display: none"></div>
     <!-- Hidden templates for modal content -->
     <!-- https://developer.mozilla.org/en-US/docs/Web/HTML/Element/template -->
     <!-- Login Form Template -->
     <template id="login-template">
+      <p id="modal-message" class="modal-message"></p>
       <form id="login-form" class="modal-form">
+        <!-- Message element added here -->
+
         <label for="username">Username</label>
         <input type="text" id="username" name="username" required />
 
@@ -45,7 +51,10 @@
 
     <!-- Signup Form Template -->
     <template id="signup-template">
+      <p id="modal-message" class="modal-message"></p>
       <form id="signup-form" class="modal-form">
+        <!-- Message element added here -->
+
         <label for="username">Username</label>
         <input type="text" id="username" name="username" required />
 
@@ -57,6 +66,37 @@
 
         <button type="submit" class="form-button">Sign Up</button>
       </form>
+    </template>
+
+    <template id="home-template">
+      <div id="container" class="home-container">
+        <h1>PONG</h1>
+        <div id="greeting" style="text-align: center; margin-top: 20px; font-size: 20px"></div>
+
+        <div class="button-container-home">
+          <div class="button-wrapper">
+            <button id="play">PLAY</button>
+          </div>
+          <div class="net">
+            <div class="net-segment black"></div>
+            <div class="net-segment white"></div>
+            <div class="net-segment black"></div>
+            <div class="net-segment white"></div>
+            <div class="net-segment black"></div>
+            <div class="net-segment white"></div>
+            <div class="net-segment black"></div>
+            <div class="net-segment white"></div>
+            <div class="net-segment black"></div>
+            <div class="net-segment white"></div>
+          </div>
+          <div class="button-wrapper">
+            <button id="chat" onclick="window.location.href='/chat/'">CHAT</button>
+          </div>
+        </div>
+        <div class="button-wrapper threejs-wrapper">
+          <button id="threejs">THREE.JS</button>
+        </div>
+      </div>
     </template>
 
     <script src="script.js"></script>
